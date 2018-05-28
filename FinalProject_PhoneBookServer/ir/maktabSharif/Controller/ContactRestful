@@ -1,0 +1,100 @@
+package ir.maktabSharif.Controller;
+
+import javax.ws.rs.core.MediaType;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import javax.decorator.Delegate;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+
+import org.apache.log4j.Logger;
+
+import ir.maktabSharif.Dao.ContactDao;
+import ir.maktabSharif.Dao.EventLogDao;
+import ir.maktabSharif.Dto.UserDto;
+import ir.maktabSharif.Log.LoggingRun;
+import ir.maktabSharif.Model.Contact;
+import ir.maktabSharif.Model.EventLog;
+import ir.maktabSharif.Model.User;
+
+@Path("contact")
+public class ContactRestful {
+
+	//private final static Logger logger=Logger.getLogger(RestContact.class);
+//	EventLog _eventLog=new EventLog();
+	//EventLogDao _eventLogDao=new EventLogDao();
+	
+	Contact newContact = new Contact();
+	ContactDao contactDao = new ContactDao();
+
+	
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response create(Contact contact) {
+		boolean checkCreate = contactDao.insert(contact);
+		if (checkCreate == true)
+		{
+			/*logger.info("ip 1.1.1.1 Create Contact");
+			_eventLog.setEventDescription("Create Contact");
+			_eventLog.setLogType("");
+			
+			_eventLogDao.insert(_eventLog);*/
+			
+			return Response.status(200).entity("Contact registered").build();
+		}
+		else
+		{
+			//logger.error("ip 1.1.1.1 Problem in craete contact");
+			return Response.status(400).entity("Error ").build();
+		}
+		
+	}
+	
+
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Contact> readAll() {
+		ArrayList<Contact> _contact = new ArrayList<>();
+		_contact = contactDao.selectAll();
+		
+		return _contact;
+	}
+	
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Contact read(@PathParam("id") int _contactId) {
+		Contact _contact = contactDao.select(_contactId);
+		return _contact;
+	}
+	
+	
+
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("id") int _contactId, Contact _contat) {
+		contactDao.update(_contat, _contactId);
+		return Response.status(200).entity("update successful").build();
+	}
+
+	@DELETE
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response delete(@PathParam("id") int _contactId) {
+		contactDao.delete(_contactId);
+		return Response.status(200).entity("delete successful").build();
+	}
+}
