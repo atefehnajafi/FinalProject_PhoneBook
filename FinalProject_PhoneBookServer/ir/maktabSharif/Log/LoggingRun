@@ -1,0 +1,28 @@
+package ir.maktabSharif.Log;
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
+
+
+public class LoggingRun {
+public static final Logger LOGGER = Logger.getLogger(LoggingRun.class);
+	
+	public void LoggerLevel(String message)
+	{
+		BasicConfigurator.configure();
+		if(LOGGER.isDebugEnabled()){
+			LOGGER.debug("This is debug : " + message);
+		}
+		
+		if(LOGGER.isInfoEnabled()){
+			LOGGER.info("This is info : " + message);
+		}
+		
+		LOGGER.warn("This is warn : " + message);
+		LOGGER.error("This is error : " + message);
+		LOGGER.fatal("This is fatal : " + message);
+		
+		
+	}
+}
